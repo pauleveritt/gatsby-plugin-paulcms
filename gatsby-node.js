@@ -7,36 +7,33 @@ async function onCreateNode(
         createContentDigest,
     }) {
     const {createNode, createParentChildLink} = actions;
-    if (node.internal.type === `Mdx`) {
-        const parent = getNode(node.parent);
-        if (
-            parent.relativePath.includes("posts")
-        ) {
-            const fieldData = {
-                title: node.frontmatter.title,
-                tags: node.frontmatter.tags || []
-            };
-            const blogPostNode = {
-                ...fieldData,
-                // Required fields.
-                id: createNodeId(`${node.id} >>> BlogPost`),
-                parent: node.id,
-                children: [],
-                internal: {
-                    type: `BlogPost`,
-                    contentDigest: createContentDigest(fieldData),
-                    content: JSON.stringify(fieldData),
-                    description: `Blog Posts`
-                }
-            };
-            blogPostNode.fileAbsolutePath = node.absolutePath;
-            createNode(blogPostNode);
-            createParentChildLink({
-                parent: node,
-                child: blogPostNode
-            });
-            return blogPostNode;
-        }
+    const parent = getNode(node.parent);
+    if (node.internal.type === `Mdx` &&
+        parent.relativePath.includes("posts")) {
+        const fieldData = {
+            title: node.frontmatter.title,
+            tags: node.frontmatter.tags || []
+        };
+        const blogPostNode = {
+            ...fieldData,
+            id: createNodeId(`${node.id} >>> BlogPost`),
+            parent: node.id,
+            children: [],
+            internal: {
+                type: `BlogPost`,
+                contentDigest: createContentDigest(fieldData),
+                content: JSON.stringify(fieldData)
+            }
+        };
+
+        blogPostNode.fileAbsolutePath = node.absolutePath;
+        createNode(blogPostNode);
+        createParentChildLink({
+            parent: node,
+            child: blogPostNode
+        });
+        return blogPostNode;
+
     }
 }
 
