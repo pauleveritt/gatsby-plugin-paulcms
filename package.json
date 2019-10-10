@@ -8,12 +8,9 @@
     "@mdx-js/react": "^1.1.5",
     "gatsby": "^2.13.50",
     "gatsby-plugin-mdx": "^1.0.0",
-    "gatsby-plugin-react-helmet": "^3.1.3",
     "gatsby-source-filesystem": "^2.1.8",
-    "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-helmet": "^5.2.1",
     "trim-right": "^1.0.1"
   },
   "keywords": [
@@ -23,9 +20,7 @@
   "scripts": {
     "build": "gatsby build",
     "develop": "gatsby develop",
-    "start": "npm run develop",
-    "format": "prettier --write \"src/**/*.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run develop"
   },
   "devDependencies": {
     "prettier": "^1.18.2"

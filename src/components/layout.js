@@ -1,13 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { StaticQuery, graphql } from 'gatsby'
+import {StaticQuery, graphql, Link} from 'gatsby'
 
-import Header from './header'
-import './layout.css'
 
-const Layout = ({ children }) => (
-  <StaticQuery
-    query={graphql`
+const Layout = ({children}) => (
+    <StaticQuery
+        query={graphql`
       query SiteTitleQuery {
         site {
           siteMetadata {
@@ -16,26 +13,22 @@ const Layout = ({ children }) => (
         }
       }
     `}
-    render={data => (
-      <>
-        <Header siteTitle={data.site.siteMetadata.title} />
-        <div
-          style={{
-            margin: '0 auto',
-            maxWidth: 960,
-            padding: '0px 1.0875rem 1.45rem',
-            paddingTop: 0,
-          }}
-        >
-          {children}
-        </div>
-      </>
-    )}
-  />
+        render={data => (
+            <>
+                <header>
+                    <h1>{data.site.siteMetadata.title}</h1>
+                    <p>
+                        <Link to={`/`}>Home</Link>
+                        <span style={{padding: '0.3em'}}>|</span>
+                        <Link to={`/posts/post1/`}>Post 1</Link>
+                    </p>
+                </header>
+                <div>
+                    {children}
+                </div>
+            </>
+        )}
+    />
 )
-
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-}
 
 export default Layout
