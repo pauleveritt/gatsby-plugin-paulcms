@@ -1,3 +1,5 @@
+const { createFilePath } = require(`gatsby-source-filesystem`);
+
 async function onCreateNode(
     {
         actions,
@@ -14,9 +16,13 @@ async function onCreateNode(
             title: node.frontmatter.title,
             tags: node.frontmatter.tags || []
         };
+
+        const slug = createFilePath({ node, getNode });
+
         const blogPostNode = {
             ...fieldData,
             id: createNodeId(`${node.id} >>> BlogPost`),
+            slug,
             parent: node.id,
             children: [],
             internal: {
@@ -63,6 +69,7 @@ exports.createSchemaCustomization = ({actions, schema}) => {
     createTypes(`
     interface Resource @nodeInterface {
         id: ID!
+        slug: String!
         title: String!
         tags: [String]!
         body: String! @parentbody
@@ -71,6 +78,7 @@ exports.createSchemaCustomization = ({actions, schema}) => {
 
     type BlogPost implements Node & Resource {
         id: ID!
+        slug: String!
         title: String!
         tags: [String]!
         body: String! @parentbody
