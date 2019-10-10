@@ -61,7 +61,7 @@ exports.createSchemaCustomization = ({actions, schema}) => {
     });
 
     createTypes(`
-    interface Resource {
+    interface Resource @nodeInterface {
         id: ID!
         title: String!
         tags: [String]!
@@ -78,17 +78,3 @@ exports.createSchemaCustomization = ({actions, schema}) => {
     }
     `);
 };
-
-exports.createResolvers = ({createResolvers}) => {
-    const resolvers = {
-        Query: {
-            allResources: {
-                type: ["Resource"],
-                resolve(source, args, context, info) {
-                    return context.nodeModel.getAllNodes({type: "Resource"})
-                },
-            },
-        },
-    }
-    createResolvers(resolvers)
-}
