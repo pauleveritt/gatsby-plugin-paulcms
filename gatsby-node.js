@@ -1,58 +1,22 @@
-const jsYaml = require(`js-yaml`)
-const _ = require(`lodash`)
-const crypto = require("crypto");
-
 async function onCreateNode(
     {
-        node,
         actions,
+        node,
         getNode,
-        loadNodeContent,
         createNodeId,
         createContentDigest,
     }) {
-    function transformObject(obj, id, type) {
-        const yamlNode = {
-            ...obj,
-            id,
-            children: [],
-            parent: node.id,
-            internal: {
-                contentDigest: createContentDigest(obj),
-                type,
-            },
-        }
-        createNode(yamlNode)
-        createParentChildLink({parent: node, child: yamlNode})
-    }
-
-    const {createNode, createNodeField, createParentChildLink} = actions
-    if (node.internal.mediaType !== `text/yaml`) {
-        return
-    }
-    const content = await loadNodeContent(node)
-    const parsedContent = jsYaml.load(content)
-    parsedContent.forEach((obj, i) => {
-        transformObject(
-            obj,
-            obj.id ? obj.id : createNodeId(`${node.id} [${i}] >>> YAML`),
-            _.upperFirst(_.camelCase(`${node.name} Yaml`))
-        )
-    })
-
-    /* Biscardi */
+    const {createNode, createParentChildLink} = actions;
     if (node.internal.type === `Mdx`) {
-        const {frontmatter} = node;
         const parent = getNode(node.parent);
         if (
-            parent.internal.type === "File" &&
-            parent.sourceInstanceName === "posts"
+            parent.relativePath.includes("posts")
         ) {
             const fieldData = {
                 title: node.frontmatter.title,
                 tags: node.frontmatter.tags || []
             };
-            createNode({
+            const blogPostNode = {
                 ...fieldData,
                 // Required fields.
                 id: createNodeId(`${node.id} >>> BlogPost`),
@@ -60,18 +24,18 @@ async function onCreateNode(
                 children: [],
                 internal: {
                     type: `BlogPost`,
-                    contentDigest: crypto
-                        .createHash(`md5`)
-                        .update(JSON.stringify(fieldData))
-                        .digest(`hex`),
+                    contentDigest: createContentDigest(fieldData),
                     content: JSON.stringify(fieldData),
                     description: `Blog Posts`
                 }
-            });
+            };
+            blogPostNode.fileAbsolutePath = node.absolutePath;
+            createNode(blogPostNode);
             createParentChildLink({
-                parent: parent,
-                child: node
+                parent: node,
+                child: blogPostNode
             });
+            return blogPostNode;
         }
     }
 }
