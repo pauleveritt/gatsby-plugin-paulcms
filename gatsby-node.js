@@ -39,8 +39,27 @@ async function onCreateNode(
 
 exports.onCreateNode = onCreateNode
 
-exports.sourceNodes = ({actions, schema}) => {
-    const {createTypes} = actions;
+exports.createSchemaCustomization = ({actions, schema}) => {
+    const {createTypes, createFieldExtension} = actions;
+
+    createFieldExtension({
+        name: `parentbody`,
+        extend() {
+            return {
+                async resolve(source, args, context, info) {
+                    const type = info.schema.getType(`Mdx`);
+                    const mdxNode = context.nodeModel.getNodeById({
+                        id: source.parent
+                    });
+                    const resolver = type.getFields()["body"].resolve;
+                    return await resolver(mdxNode, {}, context, {
+                        fieldName: "body"
+                    });
+                },
+            }
+        },
+    });
+
     createTypes(
         schema.buildObjectType({
             name: `BlogPost`,
@@ -50,38 +69,11 @@ exports.sourceNodes = ({actions, schema}) => {
                     type: "String!"
                 },
                 tags: {type: `[String]!`},
-                excerpt: {
-                    type: "String!",
-                    resolve: async (source, args, context, info) => {
-                        const type = info.schema.getType(`Mdx`);
-                        const mdxNode = context.nodeModel.getNodeById({
-                            id: source.parent
-                        });
-                        const resolver = type.getFields()["excerpt"].resolve;
-                        // noinspection UnnecessaryLocalVariableJS
-                        const excerpt = await resolver(
-                            mdxNode,
-                            {pruneLength: 140},
-                            context,
-                            {
-                                fieldName: "excerpt"
-                            }
-                        );
-                        return excerpt;
-                    }
-                },
                 body: {
                     type: "String!",
-                    resolve(source, args, context, info) {
-                        const type = info.schema.getType(`Mdx`);
-                        const mdxNode = context.nodeModel.getNodeById({
-                            id: source.parent
-                        });
-                        const resolver = type.getFields()["body"].resolve;
-                        return resolver(mdxNode, {}, context, {
-                            fieldName: "body"
-                        });
-                    }
+                    extensions: {
+                        parentbody: {},
+                    },
                 },
             },
             interfaces: [`Node`]
