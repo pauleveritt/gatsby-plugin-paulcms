@@ -60,23 +60,35 @@ exports.createSchemaCustomization = ({actions, schema}) => {
         },
     });
 
-    createTypes(
-        schema.buildObjectType({
-            name: `BlogPost`,
-            fields: {
-                id: {type: `ID!`},
-                title: {
-                    type: "String!"
-                },
-                tags: {type: `[String]!`},
-                body: {
-                    type: "String!",
-                    extensions: {
-                        parentbody: {},
-                    },
+    createTypes(`
+    interface Resource {
+        id: ID!
+        title: String!
+        tags: [String]!
+        body: String! @parentbody
+        parent: Node
+    }
+
+    type BlogPost implements Node & Resource {
+        id: ID!
+        title: String!
+        tags: [String]!
+        body: String! @parentbody
+        parent: Node
+    }
+    `);
+};
+
+exports.createResolvers = ({createResolvers}) => {
+    const resolvers = {
+        Query: {
+            allResources: {
+                type: ["Resource"],
+                resolve(source, args, context, info) {
+                    return context.nodeModel.getAllNodes({type: "Resource"})
                 },
             },
-            interfaces: [`Node`]
-        })
-    );
-};
+        },
+    }
+    createResolvers(resolvers)
+}
