@@ -1,5 +1,3 @@
-const path = require('path')
-
 module.exports = {
     siteMetadata: {
         title: 'Gatsby Starter MDX Basic'
@@ -21,8 +19,9 @@ module.exports = {
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                path: `./src/data/`,
-            },
-        },
+                name: `content`,
+                path: `${__dirname}/src/content`
+            }
+        }
     ],
 }

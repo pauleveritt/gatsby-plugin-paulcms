@@ -89,7 +89,7 @@ exports.createSchemaCustomization = ({actions, schema}) => {
     `);
 };
 
-exports.createPages = async ({graphql, actions, reporter}) => {
+exports.createPages = async ({graphql, actions, page, reporter}) => {
     const {createPage} = actions
     const result = await graphql(`
     query {
@@ -103,7 +103,7 @@ exports.createPages = async ({graphql, actions, reporter}) => {
 
     result.data.allBlogPost.nodes.forEach((node) => {
 
-        reporter.info('### blog post: ' + node.slug)
+        reporter.info('### blog post: ' + path.resolve(`./src/components/blog-post.js`))
         createPage({
             path: node.slug,
             component: path.resolve(`./src/components/blog-post.js`),
