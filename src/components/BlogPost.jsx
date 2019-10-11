@@ -17,9 +17,7 @@ export default ({data}) => {
 export const query = graphql`
   query($slug: String!) {
     blogPost(slug: { eq: $slug }) {
-        slug
-        title
-        body
+        ...ResourceInfo
     }
   }
 `

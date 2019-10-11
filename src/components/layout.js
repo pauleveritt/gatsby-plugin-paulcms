@@ -30,3 +30,12 @@ const Layout = ({children}) => (
 )
 
 export default Layout
+
+// Define some fragments used everywhere
+export const query = graphql`
+  fragment ResourceInfo on Resource {
+    slug
+    title
+    body
+  }
+`
