@@ -1,5 +1,6 @@
 import React from 'react'
-import {StaticQuery, graphql, Link} from 'gatsby'
+import {graphql, StaticQuery} from 'gatsby'
+import ResourceTypesMenu from "./ResourceTypesMenu"
 
 
 const Layout = ({children}) => (
@@ -17,9 +18,7 @@ const Layout = ({children}) => (
             <>
                 <header>
                     <h1>{data.site.siteMetadata.title}</h1>
-                    <p>
-                        <Link to={`/blogposts/`}>Blog</Link>
-                    </p>
+                    <ResourceTypesMenu/>
                 </header>
                 <div>
                     {children}
