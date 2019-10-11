@@ -1,9 +1,9 @@
 import React from "react"
-import { graphql } from "gatsby"
+import {graphql} from "gatsby"
 import Layout from "./layout"
-import { MDXRenderer } from "gatsby-plugin-mdx"
+import {MDXRenderer} from "gatsby-plugin-mdx"
 
-export default ({ data }) => {
+export default ({data}) => {
     const {title, body} = data.blogPost
     return (
         <Layout>

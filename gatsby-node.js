@@ -81,14 +81,17 @@ exports.createSchemaCustomization = ({actions, schema}) => {
     `);
 
     // Now create the types
-    createTypes(`
-    type BlogPost implements Node & Resource {
+    const sharedFields = `
         id: ID!
         slug: String!
         title: String!
         tags: [String]!
         body: String! @parentbody
         parent: Node
+    `;
+    createTypes(`
+    type BlogPost implements Node & Resource {
+     ${sharedFields}
     }
     `);
 };
@@ -100,6 +103,7 @@ exports.createPages = async ({graphql, actions}) => {
       allBlogPost {
         nodes {
             slug
+            __typename
         }
       }
     }
@@ -107,9 +111,11 @@ exports.createPages = async ({graphql, actions}) => {
 
     result.data.allBlogPost.nodes.forEach((node) => {
 
+        const componentFile = `./src/components/${node.__typename}.jsx`;
+
         createPage({
             path: node.slug,
-            component: path.resolve(`./src/components/blog-post.js`),
+            component: path.resolve(componentFile),
             context: {
                 // Data passed to context is available
                 // in page queries as GraphQL variables.
