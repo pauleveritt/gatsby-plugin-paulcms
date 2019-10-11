@@ -97,7 +97,7 @@ exports.createPages = async ({graphql, actions}) => {
     const {createPage} = actions
     const result = await graphql(`
     query {
-      allBlogPost {
+      allResource {
         nodes {
             slug
             __typename
@@ -106,7 +106,7 @@ exports.createPages = async ({graphql, actions}) => {
     }
   `)
 
-    result.data.allBlogPost.nodes.forEach((node) => {
+    result.data.allResource.nodes.forEach((node) => {
 
         const componentFile = `./src/components/${node.__typename}.jsx`;
 
