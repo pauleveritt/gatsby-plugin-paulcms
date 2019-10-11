@@ -15,8 +15,7 @@ async function onCreateNode(
     if (node.internal.type === `Mdx` &&
         parent.relativePath.includes("posts")) {
         const fieldData = {
-            title: node.frontmatter.title,
-            tags: node.frontmatter.tags || []
+            title: node.frontmatter.title
         };
 
         const slug = createFilePath({node, getNode});
@@ -74,7 +73,6 @@ exports.createSchemaCustomization = ({actions, schema}) => {
         id: ID!
         slug: String!
         title: String!
-        tags: [String]!
         body: String! @parentbody
         parent: Node
     }
@@ -85,7 +83,6 @@ exports.createSchemaCustomization = ({actions, schema}) => {
         id: ID!
         slug: String!
         title: String!
-        tags: [String]!
         body: String! @parentbody
         parent: Node
     `;
@@ -117,8 +114,6 @@ exports.createPages = async ({graphql, actions}) => {
             path: node.slug,
             component: path.resolve(componentFile),
             context: {
-                // Data passed to context is available
-                // in page queries as GraphQL variables.
                 slug: node.slug,
             },
         })
