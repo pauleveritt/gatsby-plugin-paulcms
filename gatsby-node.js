@@ -68,6 +68,7 @@ exports.createSchemaCustomization = ({actions, schema}) => {
         },
     });
 
+    // Create the base stuff
     createTypes(`
     interface Resource @nodeInterface {
         id: ID!
@@ -77,7 +78,10 @@ exports.createSchemaCustomization = ({actions, schema}) => {
         body: String! @parentbody
         parent: Node
     }
+    `);
 
+    // Now create the types
+    createTypes(`
     type BlogPost implements Node & Resource {
         id: ID!
         slug: String!
@@ -89,7 +93,7 @@ exports.createSchemaCustomization = ({actions, schema}) => {
     `);
 };
 
-exports.createPages = async ({graphql, actions, page, reporter}) => {
+exports.createPages = async ({graphql, actions}) => {
     const {createPage} = actions
     const result = await graphql(`
     query {
