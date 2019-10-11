@@ -1,4 +1,6 @@
-const { createFilePath } = require(`gatsby-source-filesystem`);
+const path = require(`path`)
+
+const {createFilePath} = require(`gatsby-source-filesystem`);
 
 async function onCreateNode(
     {
@@ -17,7 +19,7 @@ async function onCreateNode(
             tags: node.frontmatter.tags || []
         };
 
-        const slug = createFilePath({ node, getNode });
+        const slug = createFilePath({node, getNode});
 
         const blogPostNode = {
             ...fieldData,
@@ -87,3 +89,29 @@ exports.createSchemaCustomization = ({actions, schema}) => {
     `);
 };
 
+exports.createPages = async ({graphql, actions, reporter}) => {
+    const {createPage} = actions
+    const result = await graphql(`
+    query {
+      allBlogPost {
+        nodes {
+            slug
+        }
+      }
+    }
+  `)
+
+    result.data.allBlogPost.nodes.forEach((node) => {
+
+        reporter.info('### blog post: ' + node.slug)
+        createPage({
+            path: node.slug,
+            component: path.resolve(`./src/components/blog-post.js`),
+            context: {
+                // Data passed to context is available
+                // in page queries as GraphQL variables.
+                slug: node.slug,
+            },
+        })
+    });
+}

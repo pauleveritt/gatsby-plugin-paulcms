@@ -8,7 +8,7 @@ module.exports = {
         {
             resolve: `gatsby-plugin-mdx`,
             options: {
-                defaultLayouts: {default: path.resolve('./src/components/layout.js')},
+                // defaultLayouts: {default: path.resolve('./src/components/layout.js')},
             },
         },
         {
