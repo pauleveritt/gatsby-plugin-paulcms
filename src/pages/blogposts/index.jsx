@@ -1,6 +1,6 @@
 import React from "react"
-import Layout from "./layout"
 import {graphql, Link} from "gatsby"
+import Layout from "../../components/layout"
 
 export default ({data}) => {
     const {allBlogPost} = data;
@@ -9,8 +9,8 @@ export default ({data}) => {
             <h1>All</h1>
             <ul>
                 {allBlogPost.nodes.map(node => <li key={node.slug}>
-                   <Link to={node.slug}>{node.title}</Link>
-                </li>
+                        <Link to={node.slug}>{node.title}</Link>
+                    </li>
                 )}
             </ul>
         </Layout>

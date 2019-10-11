@@ -108,21 +108,6 @@ exports.createPages = async ({graphql, actions}) => {
     }
   `)
 
-    // Make pages for each Resource type
-    const resourceTypes = [...new Set(result.data.allResource.nodes.map(node => node.__typename))]
-    resourceTypes.forEach(rt => {
-        const componentFile = `./src/components/All${rt}.jsx`;
-
-        createPage({
-            path: `/${rt.toLowerCase()}s/`,
-            component: path.resolve(componentFile),
-            context: {
-                slug: `/${rt.toLowerCase()}s/`,
-            },
-        });
-
-    });
-
     result.data.allResource.nodes.forEach((node) => {
 
         const componentFile = `./src/components/${node.__typename}.jsx`;
