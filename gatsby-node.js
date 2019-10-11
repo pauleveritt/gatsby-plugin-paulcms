@@ -13,7 +13,9 @@ async function onCreateNode(
     const {createNode, createParentChildLink} = actions;
     const parent = getNode(node.parent);
     if (node.internal.type === `Mdx` &&
-        parent.relativePath.includes("posts")) {
+        parent.relativePath.includes("blogposts") &&
+        parent.name !== 'index'
+    ) {
         const fieldData = {
             title: node.frontmatter.title
         };
@@ -46,7 +48,7 @@ async function onCreateNode(
 
 exports.onCreateNode = onCreateNode
 
-exports.createSchemaCustomization = ({actions, schema}) => {
+exports.createSchemaCustomization = ({actions}) => {
     const {createTypes, createFieldExtension} = actions;
 
     createFieldExtension({
@@ -105,6 +107,21 @@ exports.createPages = async ({graphql, actions}) => {
       }
     }
   `)
+
+    // Make pages for each Resource type
+    const resourceTypes = [...new Set(result.data.allResource.nodes.map(node => node.__typename))]
+    resourceTypes.forEach(rt => {
+        const componentFile = `./src/components/All${rt}.jsx`;
+
+        createPage({
+            path: `/${rt.toLowerCase()}s/`,
+            component: path.resolve(componentFile),
+            context: {
+                slug: `/${rt.toLowerCase()}s/`,
+            },
+        });
+
+    });
 
     result.data.allResource.nodes.forEach((node) => {
 

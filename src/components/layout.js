@@ -18,9 +18,7 @@ const Layout = ({children}) => (
                 <header>
                     <h1>{data.site.siteMetadata.title}</h1>
                     <p>
-                        <Link to={`/`}>Home</Link>
-                        <span style={{padding: '0.3em'}}>|</span>
-                        <Link to={`/posts/post1/`}>Post 1</Link>
+                        <Link to={`/blogposts/`}>Blog</Link>
                     </p>
                 </header>
                 <div>
