@@ -103,7 +103,6 @@ exports.createPages = async ({graphql, actions, page, reporter}) => {
 
     result.data.allBlogPost.nodes.forEach((node) => {
 
-        reporter.info('### blog post: ' + path.resolve(`./src/components/blog-post.js`))
         createPage({
             path: node.slug,
             component: path.resolve(`./src/components/blog-post.js`),
