@@ -83,15 +83,6 @@ exports.createSchemaCustomization = ({actions}) => {
     }
     `);
 
-    // Now create the types
-    const sharedFields = `
-        id: ID!
-        slug: String!
-        title: String!
-        body: String! @parentbody
-        parent: Node
-    `;
-
     // Read this site's typedefs from a GQL file
     const typeDefs = fs.readFileSync(`typedefs.graphql`, {
         encoding: `utf-8`
