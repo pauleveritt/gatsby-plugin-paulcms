@@ -1,6 +1,20 @@
+const fs = require(`fs`);
 const path = require(`path`)
 
 const {createFilePath} = require(`gatsby-source-filesystem`);
+
+
+/*
+
+Stopping point:
+
+1) Make a mapping of directory fragment parent.relativePath.split('/')[0] to resource type
+
+{blogposts: 'BlogPost'}
+
+2)
+
+ */
 
 async function onCreateNode(
     {
@@ -88,11 +102,13 @@ exports.createSchemaCustomization = ({actions}) => {
         body: String! @parentbody
         parent: Node
     `;
-    createTypes(`
-    type BlogPost implements Node & Resource {
-     ${sharedFields}
-    }
-    `);
+
+    // Read this site's typedefs from a GQL file
+    const typeDefs = fs.readFileSync(`typedefs.graphql`, {
+        encoding: `utf-8`
+    });
+
+    createTypes(typeDefs);
 };
 
 exports.createPages = async ({graphql, actions}) => {

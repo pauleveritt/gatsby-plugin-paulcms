@@ -1,0 +1,7 @@
+    type BlogPost implements Node & Resource {
+        id: ID!
+        slug: String!
+        title: String!
+        body: String! @parentbody
+        parent: Node
+    }
