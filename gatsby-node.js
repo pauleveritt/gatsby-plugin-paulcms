@@ -4,18 +4,6 @@ const path = require(`path`)
 const {createFilePath} = require(`gatsby-source-filesystem`);
 
 
-/*
-
-Stopping point:
-
-1) Make a mapping of directory fragment parent.relativePath.split('/')[0] to resource type
-
-{blogposts: 'BlogPost'}
-
-2)
-
- */
-
 async function onCreateNode(
     {
         actions,
@@ -27,7 +15,7 @@ async function onCreateNode(
     const {createNode, createParentChildLink} = actions;
     const parent = getNode(node.parent);
     if (node.internal.type === `Mdx` &&
-        parent.relativePath.includes("blogposts") &&
+        (parent.relativePath.includes("blogposts") || parent.relativePath.includes("authors")) &&
         parent.name !== 'index'
     ) {
         const fieldData = {
@@ -36,26 +24,27 @@ async function onCreateNode(
 
         const slug = createFilePath({node, getNode});
 
-        const blogPostNode = {
+        const resourceType = parent.relativePath.includes("blogposts") ? `BlogPost` : 'Author';
+        const resourceNode = {
             ...fieldData,
-            id: createNodeId(`${node.id} >>> BlogPost`),
+            id: createNodeId(`${node.id} >>> ${resourceType}`),
             slug,
             parent: node.id,
             children: [],
             internal: {
-                type: `BlogPost`,
+                type: resourceType,
                 contentDigest: createContentDigest(fieldData),
                 content: JSON.stringify(fieldData)
             }
         };
 
-        blogPostNode.fileAbsolutePath = node.absolutePath;
-        createNode(blogPostNode);
+        resourceNode.fileAbsolutePath = node.absolutePath;
+        createNode(resourceNode);
         createParentChildLink({
             parent: node,
-            child: blogPostNode
+            child: resourceNode
         });
-        return blogPostNode;
+        return resourceNode;
 
     }
 }

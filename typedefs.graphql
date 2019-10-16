@@ -1,7 +1,15 @@
-    type BlogPost implements Node & Resource {
-        id: ID!
-        slug: String!
-        title: String!
-        body: String! @parentbody
-        parent: Node
-    }
+type BlogPost implements Node & Resource {
+    id: ID!
+    slug: String!
+    title: String!
+    body: String! @parentbody
+    parent: Node
+}
+
+type Author implements Node & Resource {
+    id: ID!
+    slug: String!
+    title: String!
+    body: String! @parentbody
+    parent: Node
+}

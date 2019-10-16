@@ -3,12 +3,12 @@ import {graphql, Link} from "gatsby"
 import Layout from "../../components/Layout"
 
 export default ({data}) => {
-    const {allBlogPost} = data;
+    const {allAuthor} = data;
     return (
         <Layout>
-            <h1>All Blog Posts</h1>
+            <h1>All Authors</h1>
             <ul>
-                {allBlogPost.nodes.map(node => <li key={node.slug}>
+                {allAuthor.nodes.map(node => <li key={node.slug}>
                         <Link to={node.slug}>{node.title}</Link>
                     </li>
                 )}
@@ -19,7 +19,7 @@ export default ({data}) => {
 
 export const query = graphql`
   query {
-    allBlogPost {
+    allAuthor {
         nodes {
           title
           slug
