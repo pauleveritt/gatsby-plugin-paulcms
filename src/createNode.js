@@ -11,24 +11,24 @@ exports.setupCreateNode = async function onCreateNode(
     const {createNode, createParentChildLink} = actions;
     const parent = getNode(node.parent);
     if (node.internal.type === `Mdx` &&
-        (parent.relativePath.includes("blogposts") || parent.relativePath.includes("authors")) &&
-        parent.name !== 'index'
-    ) {
+        parent.relativePath.includes("blogposts") &&
+        parent.name !== 'index')
+
+    {
         const fieldData = {
             title: node.frontmatter.title
         };
 
         const slug = createFilePath({node, getNode});
 
-        const resourceType = parent.relativePath.includes("blogposts") ? `BlogPost` : 'Author';
         const resourceNode = {
             ...fieldData,
-            id: createNodeId(`${node.id} >>> ${resourceType}`),
+            id: createNodeId(`${node.id} >>> BlogPost`),
             slug,
             parent: node.id,
             children: [],
             internal: {
-                type: resourceType,
+                type: `BlogPost`,
                 contentDigest: createContentDigest(fieldData),
                 content: JSON.stringify(fieldData)
             }
@@ -36,10 +36,10 @@ exports.setupCreateNode = async function onCreateNode(
 
         resourceNode.fileAbsolutePath = node.absolutePath;
         createNode(resourceNode);
-        createParentChildLink({
-            parent: node,
-            child: resourceNode
-        });
+        // createParentChildLink({
+        //     parent: node,
+        //     child: resourceNode
+        // });
         return resourceNode;
 
     }
