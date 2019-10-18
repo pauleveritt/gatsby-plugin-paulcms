@@ -6,7 +6,7 @@ type BlogPost implements Node & Resource {
     parent: Node
 }
 
-type Author implements Node & Resource {
+type Author implements Node & Resource @metadata(plural: "Authors") {
     id: ID!
     slug: String!
     title: String!
